@@ -2,7 +2,8 @@ const Banner = require("../models/banner")
 const Category = require("../models/category")
 const formidable = require("formidable");
 const fs = require("fs");
-const {uploadImageToS3,removeImageFromS3} = require("../services/awsService")
+const {uploadImageToS3,removeImageFromS3} = require("../services/awsService");
+const { type } = require("os");
 
 exports.getbannerById = (req,res,next,id) =>{
 
@@ -76,8 +77,9 @@ exports.getbanner = (req,res) =>{
 }
 
 exports.getAllbanner = (req,res) =>{
+    let type=req.query.type?req.query.type:/$/;
     
-    Banner.find().exec((err,banners) => {
+    Banner.find({type:type}).exec((err,banners) => {
         if(err){
             return res.status(400).json({
                 error: "No Banners found "

@@ -23,7 +23,8 @@
     "lodash": "^4.17.21",
     "mathjs": "^11.1.0",
     "mongoose": "^6.5.3",
-    "sharp": "^0.30.7"
+    "sharp": "^0.30.7",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

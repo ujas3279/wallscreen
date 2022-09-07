@@ -13,6 +13,7 @@ exports.uploadImageToS3 = async (buffer,fileName,folder) =>{
         Bucket: process.env.AWS_S3_BUCKET_NAME,
         Key: `${folder}/${uuid()}-${fileName.replace(' ','-')}`,
         Body: buffer,
+        ContentType: 'image/jpeg'
       }).promise();   
 }
 

@@ -74,17 +74,11 @@ exports.createwallpaper = (req,res) => {
 
 exports.getwallpaper= (req,res) =>{
     
-    return res.json(req.wallpaper)
+    return res.json({success:true,data:req.wallpaper
+    })
 }
 
-//middele ware
-// exports.photo = (req,res,next) => {
-//     if(req.wallpaper.photo.data){
-//         res.set("Content-Type", req.wallpaper.photo.contentType)
-//         return res.send(req.wallpaper.photo.data)
-//     }
-//     next();
-// }
+
 
 //delete Controller
 exports.deletewallpaper = (req,res) =>{
@@ -171,7 +165,7 @@ exports.getAllwallpapers = (req,res) =>{
             }
             return res.json({
               message:"success",
-              status: true,
+              success: true,
               data:{
               total_data: count,
               total_page: (count>limit)?(count%limit==0)?count/limit:(count/limit)+1:1,
@@ -207,7 +201,7 @@ exports.getAllwallpapersBycategory = (req,res) =>{
             }
             return res.json({
               message:"success",
-              status: true,
+              success: true,
               data:{
               total_data: count,
               total_page: (count>limit)?(count%limit==0)?count/limit:(count/limit)+1:1,
@@ -243,33 +237,64 @@ function formatBytes(bytes, decimals = 2) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 exports.increaseViewCount = (req,res)=>{
-    Wallpaper.updateOne({ views: sequelize.literal('views + 1') }, { where: { _id: req.query.id } },(err,data)=>{
-           if(err){
-            return res.status(400).json("error");
-           }
-           else{
-            res.status(200).json("Updated");
-           }
+    let wallpaper = req.wallpaper;
+    wallpaper.views += 1;
+
+    wallpaper.save((err,wallpaper) => {
+            if(err){
+                return res.status(400).json({
+                    error: "Uodate wallpaper in db is failed"
+                })
+            }
+            res.status(200).json({"success" : true,"Message": "Views Count updated"});
     });
 }
+exports.increaseDownloadCount = (req,res)=>{
+    let wallpaper = req.wallpaper;
+    wallpaper.downloads += 1;
 
-//update stock based on purchase
-// exports.updateStock = (req,res,next) => {
-//     let myOperation = req.body.order.wallpapers.map(prod => {
-//         return {
-//             updateOne: {
-//                 filter : {_id : prod._id},
-//                 update : {$inc: {stock: -prod.count, sold: +prod.count}}
-//             }
-//         }
-//     })
-//     wallpaper.bulkWrite(myOperation, {}, (err,wallpapers) => {
-//         if(err){
-//             return res.status(400).json({
-//                 error: "Bulk operation failed"
-//             })
-//         }
-//         next()
-//     });
-// }
+    wallpaper.save((err,wallpaper) => {
+            if(err){
+                return res.status(400).json({
+                    error: "Uodate wallpaper in db is failed"
+                })
+            }
+            res.status(200).json({"success" : true,"Message": "Downloads Count updated"})
+    });
+}
+exports.getAllwallpapersBySearch = (req,res) =>{
+    let limit = req.query.limit ? parseInt(req.query.limit) : 8
+    let page = req.query.page ? parseInt(req.query.page) : 1
+    let sortBy = req.query.sortBy ? req.query.sortBy : "_id"
+    let search = "/"+req.query.searh+"*$/";
 
+    Wallpaper.find({
+        displayName: search
+      })
+    .populate("category","categoryName")
+    .sort([[sortBy, "desc"]]).skip((page-1) * limit)
+    .limit(limit)
+    .exec((err, wallpapers) => {
+        if(err){
+            return res.status(400).json({
+                error: "No wallpaper found"
+            })
+        }
+        Wallpaper.estimatedDocumentCount({displayName: search}).exec((count_error, count) => {
+            if (err) {
+              return res.json(count_error);
+            }
+            return res.json({
+              message:"success",
+              success: true,
+              data:{
+              total_data: count,
+              total_page: (count>limit)?(count%limit==0)?count/limit:(count/limit)+1:1,
+              page: page,
+              pageSize: wallpapers.length,
+              data: wallpapers
+              }
+            });
+          });
+    })
+}
