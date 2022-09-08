@@ -53,7 +53,7 @@ exports.createwallpaper = (req,res) => {
             
             let data= await uploadImageToS3(buffer,file.photo.originalFilename,'rawWallpaper');
             wallpaper.rawUrl=data.Location;
-            await sharp(file.photo.filepath).jpeg( { quality: 30 } ).toBuffer().then(async (outputBuffer)=> {
+            await sharp(file.photo.filepath).jpeg( { quality: 5 } ).toBuffer().then(async (outputBuffer)=> {
                 let data= await uploadImageToS3(outputBuffer,file.photo.originalFilename,'wallpaper');
                 wallpaper.url=data.Location;
              });
@@ -153,28 +153,24 @@ exports.getAllwallpapers = (req,res) =>{
     .populate("category","categoryName")
     .sort([[sortBy, "desc"]]).skip((page-1) * limit)
     .limit(limit)
-    .exec((err, wallpapers) => {
+    .exec(async (err, wallpapers) => {
         if(err){
             return res.status(400).json({
                 error: "No wallpaper found"
             })
         }
-        Wallpaper.estimatedDocumentCount({}).exec((count_error, count) => {
-            if (err) {
-              return res.json(count_error);
-            }
+        const count = await Wallpaper.countDocuments();
             return res.json({
               message:"success",
               success: true,
               data:{
               total_data: count,
-              total_page: (count>limit)?(count%limit==0)?count/limit:(count/limit)+1:1,
+              total_page: (count%limit==0)?parseInt(count/limit):(parseInt(count/limit))+1,
               page: page,
               pageSize: wallpapers.length,
               data: wallpapers
               }
             });
-          });
     })
 }
 exports.getAllwallpapersBycategory = (req,res) =>{
@@ -189,28 +185,26 @@ exports.getAllwallpapersBycategory = (req,res) =>{
     .populate("category","categoryName")
     .sort([[sortBy, "desc"]]).skip((page-1) * limit)
     .limit(limit)
-    .exec((err, wallpapers) => {
+    .exec(async (err, wallpapers) => {
         if(err){
             return res.status(400).json({
                 error: "No wallpaper found"
             })
         }
-        Wallpaper.estimatedDocumentCount({category: cat}).exec((count_error, count) => {
-            if (err) {
-              return res.json(count_error);
-            }
+        const count = await Wallpaper.countDocuments({
+            category: cat
+          });
             return res.json({
               message:"success",
               success: true,
               data:{
               total_data: count,
-              total_page: (count>limit)?(count%limit==0)?count/limit:(count/limit)+1:1,
+              total_page: (count%limit==0)?parseInt(count/limit):(parseInt(count/limit))+1,
               page: page,
               pageSize: wallpapers.length,
               data: wallpapers
               }
             });
-          });
     })
 }
 
@@ -266,35 +260,33 @@ exports.getAllwallpapersBySearch = (req,res) =>{
     let limit = req.query.limit ? parseInt(req.query.limit) : 8
     let page = req.query.page ? parseInt(req.query.page) : 1
     let sortBy = req.query.sortBy ? req.query.sortBy : "_id"
-    let search = "/"+req.query.searh+"*$/";
+    let search = req.query.search;
 
     Wallpaper.find({
-        displayName: search
+        displayName: {$regex : search}
       })
     .populate("category","categoryName")
     .sort([[sortBy, "desc"]]).skip((page-1) * limit)
     .limit(limit)
-    .exec((err, wallpapers) => {
+    .exec(async (err, wallpapers) => {
         if(err){
             return res.status(400).json({
                 error: "No wallpaper found"
             })
         }
-        Wallpaper.estimatedDocumentCount({displayName: search}).exec((count_error, count) => {
-            if (err) {
-              return res.json(count_error);
-            }
+        const count = await Wallpaper.countDocuments({
+            displayName: {$regex : search}
+          });
             return res.json({
               message:"success",
               success: true,
               data:{
               total_data: count,
-              total_page: (count>limit)?(count%limit==0)?count/limit:(count/limit)+1:1,
+              total_page: (count%limit==0)?parseInt(count/limit):(parseInt(count/limit))+1,
               page: page,
               pageSize: wallpapers.length,
               data: wallpapers
               }
             });
-          });
     })
 }

@@ -76,23 +76,32 @@ exports.getbanner = (req,res) =>{
     return res.json(req.banner);
 }
 
-exports.getAllbanner = (req,res) =>{
-    let type=req.query.type?req.query.type:/$/;
+exports.getAllbanner = async (req,res) =>{
     
-    Banner.find({type:type}).exec((err,banners) => {
-        if(err){
-            return res.status(400).json({
-                error: "No Banners found "
-            })
-        }
+    const New = await Banner.find({type:'New'});
+    const Popular = await Banner.find({type:'Popular'});
+    const Trending = await Banner.find({type:'Trending'});
         let data={
             "success":true,
             "message":"success",
-            "data":banners
+            "data":[
+                {
+                    "type":"Popular",
+                    "data":Popular
+                },
+                {
+                    "type":"Trending",
+                    "data":Trending
+                },
+                {
+                    "type":"New",
+                    "data":New
+                }
+            ]
         }
 
         res.json(data);
-    })
+    
 }
 
 exports.updatebanner = (req,res) =>{
