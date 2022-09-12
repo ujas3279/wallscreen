@@ -34,14 +34,14 @@ exports.createbanner = async (req,res) =>{
         }
 
         //destructure the fields
-        const {categoryName,type} = fields;
+        const {category,type} = fields;
 
-        if(!categoryName ){
+        if(!category ){
             return res.status(400).json({
                 error: "Please include all fields"
             })
         }
-       Banner.findOne({type:type,categoryName:categoryName},async (err,banner)=>{
+       Banner.findOne({type:type,category:category},async (err,banner)=>{
         if(banner && !err){
             return res.json({"message": "Banner Already Exist"});
         }
@@ -78,9 +78,9 @@ exports.getbanner = (req,res) =>{
 
 exports.getAllbanner = async (req,res) =>{
     
-    const New = await Banner.find({type:'New'});
-    const Popular = await Banner.find({type:'Popular'});
-    const Trending = await Banner.find({type:'Trending'});
+    const New = await Banner.find({type:'New'}).populate("category","categoryName");
+    const Popular = await Banner.find({type:'Popular'}).populate("category","categoryName");
+    const Trending = await Banner.find({type:'Trending'}).populate("category","categoryName");
         let data={
             "success":true,
             "message":"success",

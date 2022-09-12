@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const {ObjectId} = mongoose.Schema;
 
 const bannerSchema = new mongoose.Schema({
     type: {
@@ -7,11 +8,10 @@ const bannerSchema = new mongoose.Schema({
         required: true,
         maxlength: 32,
     },
-    categoryName: {
-        type: String,
-        trim: true,
-        required: true,
-        maxlength: 32,
+    category: {
+        type: ObjectId,
+        ref: "Category",
+        required: true
     },
     url: {
         type: String,
