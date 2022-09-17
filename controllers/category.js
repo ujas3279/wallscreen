@@ -9,7 +9,8 @@ exports.getCategoryById = (req,res,next,id) =>{
 
         if(err){
             return res.status(400).json({
-                error: "Category not found in DB"
+                success:false,
+                error: "Category not found in DB",errorMessage: err
             })
         }
 
@@ -27,7 +28,8 @@ exports.createCategory = async (req,res) =>{
         if(err)
         {
             return res.status(400).json({
-                error : "Problem with image"
+                success:false,
+                error : "Problem with image",errorMessage: err
             });
         }
 
@@ -36,6 +38,7 @@ exports.createCategory = async (req,res) =>{
 
         if(!categoryName ){
             return res.status(400).json({
+                success:false,
                 error: "Please include all fields"
             })
         }
@@ -55,11 +58,12 @@ exports.createCategory = async (req,res) =>{
         category.save((err,category) => {
             if(err){
                 return res.status(400).json({
-                    error: "Saving category in db is failed"
+                    success:false,
+                    error: "Saving category in db is failed",errorMessage: err
                 })
             }
 
-            res.json(category)
+            res.json({success: true,message: "Category Added Successfully"})
         } )
     });
 
@@ -74,7 +78,8 @@ exports.getAllCategory = (req,res) =>{
     Category.find().exec((err,categories) => {
         if(err){
             return res.status(400).json({
-                error: "No categories found "
+                success:false,
+                error: "No categories found ",errorMessage: err
             })
         }
         let data={
@@ -94,11 +99,12 @@ exports.updateCategory = (req,res) =>{
     category.save((err, updatedCategory) => {
         if(err){
             return res.status(400).json({
-                error: "Failed to update category "
+                success:false,
+                error: "Failed to update category ",errorMessage: err
             })
         }
 
-        res.json(updatedCategory);
+        res.json({success:true,message: "Category Updated Successfully"});
     })
 }
 
@@ -110,7 +116,8 @@ exports.removeCategory = (req,res) =>{
     category.remove(async (err,category) =>{
         if(err){
             return res.status(400).json({
-                error: "Failed to delete category "
+                success:false,
+                error: "Failed to delete category ",errorMessage: err
             })
         }
         if(url)
@@ -122,6 +129,7 @@ exports.removeCategory = (req,res) =>{
             });
         }
         res.json({
+            success: true,
             message: "Successfull deleted"
         })
     })
