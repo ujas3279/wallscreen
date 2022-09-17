@@ -11,7 +11,8 @@ exports.getbannerById = (req,res,next,id) =>{
 
         if(err){
             return res.status(400).json({
-                error: "banner not found in DB"
+                success:false,
+                error: "banner not found in DB",errorMessage: err
             })
         }
 
@@ -29,24 +30,32 @@ exports.createbanner = async (req,res) =>{
         if(err)
         {
             return res.status(400).json({
-                error : "Problem with image"
+                success:false,
+                message : "Problem with image",errorMessage: err
             });
         }
 
         //destructure the fields
         const {category,type} = fields;
 
-        if(!category ){
+        if(!category && !type){
             return res.status(400).json({
-                error: "Please include all fields"
+                success:false,
+                message: "Please include all fields"
             })
         }
+       Banner.find({type:type}).exec((err,data)=>{
+        if(data.length >= 3){
+            return res.status(400).json({success:false,"message" : "already 3 banner exist for type "+type})
+        }
+        else{
+       
        Banner.findOne({type:type,category:category},async (err,banner)=>{
         if(banner && !err){
-            return res.json({"message": "Banner Already Exist"});
+            return res.json({success:false,"message": "Banner Already Exist"});
         }
         else if(err){
-            return res.status(400).json({"message": "Banner Already Exist"});
+            return res.status(400).json({success:false,"message": err});
         }else{
            let banner= new Banner(fields);
         
@@ -61,13 +70,18 @@ exports.createbanner = async (req,res) =>{
         banner.save((err,banner) => {
             if(err){
                 return res.status(400).json({
-                    error: "Saving banner in db is failed"
+                    success:false,
+                    error: "Saving banner in db is failed",
+                    errorMessage: err
                 })
             }
 
-            res.json(banner)
+            res.json({success: "true"})
         });}
-      })
+      });
+           
+    }
+})
     });
 
 }
@@ -112,11 +126,12 @@ exports.updatebanner = (req,res) =>{
     banner.save((err, updatedbanner) => {
         if(err){
             return res.status(400).json({
-                error: "Failed to update banner "
+                success:false,
+                error: "Failed to update banner ",errorMessage: err
             })
         }
 
-        res.json(updatedbanner);
+        res.json({"success": "true"});
     })
 }
 
@@ -128,7 +143,8 @@ exports.removebanner = (req,res) =>{
     banner.remove(async (err,banner) =>{
         if(err){
             return res.status(400).json({
-                error: "Failed to delete banner "
+                success:false,
+                error: "Failed to delete banner ",errorMessage: err
             })
         }
         if(url)
@@ -140,6 +156,7 @@ exports.removebanner = (req,res) =>{
             });
         }
         res.json({
+            success: "true",
             message: "Successfull deleted"
         })
     })
