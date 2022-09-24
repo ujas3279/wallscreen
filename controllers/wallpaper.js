@@ -14,7 +14,7 @@ exports.getwallpaperById = (req,res,next,id) =>{
     .exec((err,wallpaper) => {
         if(err)
         {
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "wallpaper not found",errorMessage: err
             });
@@ -32,7 +32,7 @@ exports.createwallpaper = (req,res) => {
     form.parse(req,async (err,fields,file) => {
         if(err)
         {
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error : "Problem with image",errorMessage: err
             });
@@ -64,7 +64,7 @@ exports.createwallpaper = (req,res) => {
         //save DB
         wallpaper.save((err,wallpaper) => {
             if(err){
-                return res.status(400).json({
+                return res.json({
                     success:false,
                     error: "Saving wallpaper in db is failed",errorMessage: err
                 })
@@ -90,7 +90,7 @@ exports.deletewallpaper = (req,res) =>{
     let rawUrl = wallpaper.rawUrl;
     wallpaper.remove((err,deletedwallpaper) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "Failed to delete the wallpaper",errorMessage: err
             })
@@ -123,7 +123,7 @@ exports.updatewallpaper = (req,res) =>{
     form.parse(req,(err,fields,file) => {
         if(err)
         {
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error : "Problem with image",errorMessage: err
             });
@@ -137,7 +137,7 @@ exports.updatewallpaper = (req,res) =>{
         //save DB
         wallpaper.save((err,wallpaper) => {
             if(err){
-                return res.status(400).json({
+                return res.json({
                     success:false,
                     message: "Uodate wallpaper in db is failed"
                 })
@@ -161,7 +161,7 @@ exports.getAllwallpapers = (req,res) =>{
     .limit(limit)
     .exec(async (err, wallpapers) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "No wallpaper found",errorMessage: err
             })
@@ -194,7 +194,7 @@ exports.getAllwallpapersBycategory = (req,res) =>{
     .limit(limit)
     .exec(async (err, wallpapers) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "No wallpaper found",errorMessage: err
             })
@@ -220,7 +220,7 @@ exports.getAllwallpapersBycategory = (req,res) =>{
 exports.getAllUniqueCategories = (req,res) => {
     Wallpaper.distinct("category", {}, (err,category) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 error: "No category found"
             })
         }
@@ -244,7 +244,7 @@ exports.increaseViewCount = (req,res)=>{
 
     wallpaper.save((err,wallpaper) => {
             if(err){
-                return res.status(400).json({
+                return res.json({
                     error: "Uodate wallpaper in db is failed"
                 })
             }
@@ -257,7 +257,7 @@ exports.increaseDownloadCount = (req,res)=>{
 
     wallpaper.save((err,wallpaper) => {
             if(err){
-                return res.status(400).json({
+                return res.json({
                     success:false,
                     error: "Uodate wallpaper in db is failed",errorMessage: err
                 })
@@ -279,7 +279,7 @@ exports.getAllwallpapersBySearch = (req,res) =>{
     .limit(limit)
     .exec(async (err, wallpapers) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "No wallpaper found",errorMessage: err
             })

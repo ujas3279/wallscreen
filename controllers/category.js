@@ -10,7 +10,7 @@ exports.getCategoryById = (req,res,next,id) =>{
     Category.findById(id).exec((err, cate) =>{
 
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "Category not found in DB",errorMessage: err
             })
@@ -29,7 +29,7 @@ exports.createCategory = async (req,res) =>{
     form.parse(req,async (err,fields,file) => {
         if(err)
         {
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error : "Problem with image",errorMessage: err
             });
@@ -39,7 +39,7 @@ exports.createCategory = async (req,res) =>{
         const {categoryName} = fields;
 
         if(!categoryName ){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "Please include all fields"
             })
@@ -59,7 +59,7 @@ exports.createCategory = async (req,res) =>{
         //save DB
         category.save((err,category) => {
             if(err){
-                return res.status(400).json({
+                return res.json({
                     success:false,
                     error: "Saving category in db is failed",errorMessage: err,message: "Same Category Already Exist"
                 })
@@ -79,7 +79,7 @@ exports.getAllCategory = (req,res) =>{
     
     Category.find().exec((err,categories) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "No categories found ",errorMessage: err
             })
@@ -100,7 +100,7 @@ exports.updateCategory = (req,res) =>{
 
     category.save((err, updatedCategory) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "Failed to update category ",errorMessage: err
             })
@@ -117,7 +117,7 @@ exports.removeCategory = (req,res) =>{
 
     category.remove(async (err,category) =>{
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "Failed to delete category ",errorMessage: err
             })

@@ -10,7 +10,7 @@ exports.getbannerById = (req,res,next,id) =>{
     Banner.findById(id).exec((err, cate) =>{
 
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "banner not found in DB",errorMessage: err
             })
@@ -29,7 +29,7 @@ exports.createbanner = async (req,res) =>{
     form.parse(req,async (err,fields,file) => {
         if(err)
         {
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 message : "Problem with image",errorMessage: err
             });
@@ -39,14 +39,14 @@ exports.createbanner = async (req,res) =>{
         const {category,type} = fields;
 
         if(!category && !type){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 message: "Please include all fields"
             })
         }
        Banner.find({type:type}).exec((err,data)=>{
         if(data.length >= 3){
-            return res.status(400).json({success:false,message : "already 3 banner exist for type "+type})
+            return res.json({success:false,message : "already 3 banner exist for type "+type})
         }
         else{
        
@@ -55,7 +55,7 @@ exports.createbanner = async (req,res) =>{
             return res.json({success:false,message: "Banner Already Exist"});
         }
         else if(err){
-            return res.status(400).json({success:false,"message": err});
+            return res.json({success:false,"message": err});
         }else{
            let banner= new Banner(fields);
         
@@ -69,7 +69,7 @@ exports.createbanner = async (req,res) =>{
         //save DB
         banner.save((err,banner) => {
             if(err){
-                return res.status(400).json({
+                return res.json({
                     success:false,
                     error: "Saving banner in db is failed",
                     errorMessage: err
@@ -125,7 +125,7 @@ exports.updatebanner = (req,res) =>{
 
     banner.save((err, updatedbanner) => {
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "Failed to update banner ",errorMessage: err
             })
@@ -142,7 +142,7 @@ exports.removebanner = (req,res) =>{
 
     banner.remove(async (err,banner) =>{
         if(err){
-            return res.status(400).json({
+            return res.json({
                 success:false,
                 error: "Failed to delete banner ",errorMessage: err
             })
