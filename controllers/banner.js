@@ -76,7 +76,7 @@ exports.createbanner = async (req,res) =>{
                 })
             }
 
-            res.json({success: "true"})
+            res.json({success: true, message:"Banner Saved Successfully"})
         });}
       });
            
@@ -131,7 +131,7 @@ exports.updatebanner = (req,res) =>{
             })
         }
 
-        res.json({"success": "true"});
+        res.json({success: true,message:"Banner Updated Successfully"});
     })
 }
 
@@ -156,7 +156,7 @@ exports.removebanner = (req,res) =>{
             });
         }
         res.json({
-            success: "true",
+            success: true,
             message: "Successfull deleted"
         })
     })

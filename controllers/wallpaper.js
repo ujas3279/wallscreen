@@ -139,7 +139,7 @@ exports.updatewallpaper = (req,res) =>{
             if(err){
                 return res.status(400).json({
                     success:false,
-                    error: "Uodate wallpaper in db is failed"
+                    message: "Uodate wallpaper in db is failed"
                 })
             }
 
