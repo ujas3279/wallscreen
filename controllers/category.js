@@ -1,4 +1,6 @@
-const Category = require("../models/category")
+const Category = require("../models/category");
+const Wallpaper = require("../models/wallpaper");
+const Banner = require("../models/banner");
 const formidable = require("formidable");
 const {uploadImageToS3,removeImageFromS3} = require("../services/awsService");
 const fs = require("fs");
@@ -59,7 +61,7 @@ exports.createCategory = async (req,res) =>{
             if(err){
                 return res.status(400).json({
                     success:false,
-                    error: "Saving category in db is failed",errorMessage: err
+                    error: "Saving category in db is failed",errorMessage: err,message: "Same Category Already Exist"
                 })
             }
 
@@ -120,6 +122,8 @@ exports.removeCategory = (req,res) =>{
                 error: "Failed to delete category ",errorMessage: err
             })
         }
+        await Wallpaper.remove({ category: category._id });
+        await Banner.remove({ category: category._id });
         if(url)
         {
             removeImageFromS3(url,(err)=>{
