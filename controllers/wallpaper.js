@@ -151,7 +151,7 @@ exports.updatewallpaper = (req,res) =>{
 
 //wallpaper listining
 exports.getAllwallpapers = (req,res) =>{
-    let limit = req.query.limit ? parseInt(req.query.limit) : 10
+    let limit = req.query.limit ? parseInt(req.query.limit) : 65000
     let page = req.query.page ? parseInt(req.query.page) : 1
     let sortBy = req.query.sortBy ? req.query.sortBy : "_id"
 
