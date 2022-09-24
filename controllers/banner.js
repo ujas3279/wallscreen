@@ -46,13 +46,13 @@ exports.createbanner = async (req,res) =>{
         }
        Banner.find({type:type}).exec((err,data)=>{
         if(data.length >= 3){
-            return res.status(400).json({success:false,"message" : "already 3 banner exist for type "+type})
+            return res.status(400).json({success:false,message : "already 3 banner exist for type "+type})
         }
         else{
        
        Banner.findOne({type:type,category:category},async (err,banner)=>{
         if(banner && !err){
-            return res.json({success:false,"message": "Banner Already Exist"});
+            return res.json({success:false,message: "Banner Already Exist"});
         }
         else if(err){
             return res.status(400).json({success:false,"message": err});
@@ -96,8 +96,8 @@ exports.getAllbanner = async (req,res) =>{
     const Popular = await Banner.find({type:'Popular'}).populate("category","categoryName");
     const Trending = await Banner.find({type:'Trending'}).populate("category","categoryName");
         let data={
-            "success":true,
-            "message":"success",
+            success:true,
+            message:"success",
             "data":[
                 {
                     "type":"Popular",
