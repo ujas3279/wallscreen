@@ -272,7 +272,7 @@ exports.getAllwallpapersBySearch = (req,res) =>{
     let search = req.query.search;
 
     Wallpaper.find({
-        displayName: {$regex : search}
+        displayName: {$regex : search , $options: "i"}
       })
     .populate("category","categoryName")
     .sort([[sortBy, "desc"]]).skip((page-1) * limit)
