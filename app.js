@@ -11,6 +11,7 @@ const cors = require("cors");
 const categoryRoutes = require("./routes/category");
 const wallpaperRoutes = require("./routes/wallpaper");
 const bannerRoutes = require("./routes/banner");
+const keyRoutes = require("./routes/key");
 
 
 
@@ -24,6 +25,7 @@ const bannerRoutes = require("./routes/banner");
 app.use("/api", categoryRoutes);
 app.use("/api", wallpaperRoutes);
 app.use("/api", bannerRoutes);
+app.use("/api", keyRoutes);
 
 //Port
 const port = process.env.PORT || 5000;
