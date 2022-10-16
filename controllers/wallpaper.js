@@ -288,9 +288,13 @@ exports.getAllwallpapersBySearch = (req,res) =>{
                 error: "No wallpaper found",errorMessage: err
             })
         }
-        const count = await Wallpaper.countDocuments({
-            displayName: {$regex : search}
-          });
+        const count = await Wallpaper.countDocuments({$or:[{
+            displayName: {$regex : search , $options: "i"}
+          },
+          {
+            categorySearch: {$regex : search , $options: "i"}
+          }
+        ]});
             return res.json({
               message:"success",
               success: true,
