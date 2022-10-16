@@ -55,6 +55,10 @@ const wallpaperSchema = new mongoose.Schema({
         type: Boolean,
         default:false
     },
+    categorySearch: {
+        type: String,
+        trim: true
+    },
 
 },{timestamps: true}) ;
 
