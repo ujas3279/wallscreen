@@ -55,7 +55,7 @@ exports.createwallpaper = (req,res) => {
             
             let data= await uploadImageToS3(buffer,file.photo.originalFilename,'rawWallpaper');
             wallpaper.rawUrl=data.Location;
-            await sharp(file.photo.filepath).jpeg( { quality: 5 } ).toBuffer().then(async (outputBuffer)=> {
+            await sharp(file.photo.filepath).jpeg( { quality: 30 } ).toBuffer().then(async (outputBuffer)=> {
                 let data= await uploadImageToS3(outputBuffer,file.photo.originalFilename,'wallpaper');
                 wallpaper.url=data.Location;
              });
