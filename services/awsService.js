@@ -3,11 +3,13 @@ require('dotenv').config()
 const aws = require('aws-sdk');
 const uuid = require('uuid').v4;
 const fs = require('fs');
+const wasabiEndpoint = new aws.Endpoint(process.env.ENDPOINT);
 
 exports.uploadImageToS3 = async (buffer,fileName,folder) =>{
     const s3 = new aws.S3({
         accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+        endpoint: wasabiEndpoint,
       });
        return  await s3.upload({
         Bucket: process.env.AWS_S3_BUCKET_NAME,
