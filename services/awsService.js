@@ -23,6 +23,7 @@ exports.removeImageFromS3 = async (url,callback) =>{
   const s3 = new aws.S3({
       accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+      endpoint: wasabiEndpoint,
     });
     let imagePath=url.split('/').slice(-2);
     let key= imagePath[0]+'/'+imagePath[1].replace('%20', ' '); 
