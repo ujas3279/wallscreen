@@ -77,7 +77,7 @@ exports.getCategory = (req,res) =>{
 
 exports.getAllCategory = (req,res) =>{
     
-    Category.find().exec((err,categories) => {
+    Category.find().sort({categoryName:1}).exec((err,categories) => {
         if(err){
             return res.json({
                 success:false,
