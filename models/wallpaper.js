@@ -28,6 +28,11 @@ const wallpaperSchema = new mongoose.Schema({
         maxlength: 32,
         trim: true
     },
+    author: {
+        type: String,
+        trim: true,
+        default:'Admin'
+    },
     views: {
         type: Number,
         required: true,

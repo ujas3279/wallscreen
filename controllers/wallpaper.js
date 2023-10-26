@@ -39,7 +39,7 @@ exports.createwallpaper = (req,res) => {
         }
 
         //destructure the fields
-        const {displayName, category, downloads, views} = fields;
+        const {displayName, category, downloads, views, author} = fields;
 
 
         let wallpaper = new Wallpaper(fields);
